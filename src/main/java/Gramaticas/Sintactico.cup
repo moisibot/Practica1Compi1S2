@@ -1,0 +1,62 @@
+
+package Gramaticas;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+
+parser code {:
+  
+:}
+
+// terminales
+terminal GRAFICAR, CIRCULO, CUADRADO, RECTANGULO, LINEA, POLIGONO;
+terminal ANIMAR, OBJETO, ANTERIOR;
+terminal String COLOR, ANIM_TIPO;
+terminal SUMA, RESTA, MULTIPLICACION, DIVISION;
+terminal PARENTESIS_ABIERTO, PARENTESIS_CERRADO, COMA, IGUAL;
+terminal String IDENTIFICADOR;
+terminal Integer ENTEROS;
+terminal Double DECIMAL;
+
+// no terminales
+non terminal programa;
+non terminal instruccion;
+non terminal figura;
+non terminal animacion;
+non terminal expr;
+
+// precedencias
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+precedence left PARENTESIS_ABIERTO, PARENTESIS_CERRADO;
+
+// producciones
+start with programa;
+
+programa ::= instruccion programa
+           | instruccion
+           ;
+
+instruccion ::= figura
+              | animacion
+              ;
+
+figura ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
+         | GRAFICAR CUADRADO PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
+         | GRAFICAR RECTANGULO PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
+         | GRAFICAR LINEA PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
+         | GRAFICAR POLIGONO PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
+         ;
+
+animacion ::= ANIMAR OBJETO ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO COMA expr COMA expr COMA expr PARENTESIS_CERRADO
+            ;
+
+expr ::= expr SUMA expr
+       | expr RESTA expr
+       | expr MULTIPLICACION expr
+       | expr DIVISION expr
+       | PARENTESIS_ABIERTO expr PARENTESIS_CERRADO
+       | ENTEROS
+       | DECIMAL
+       | IDENTIFICADOR
+       ;
