@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -50,6 +51,11 @@ public class Inicio extends javax.swing.JFrame {
         Limpiar.setText("Limpiar");
 
         Compilar.setText("Compilar");
+        Compilar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CompilarActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Linea:");
 
@@ -144,7 +150,7 @@ public class Inicio extends javax.swing.JFrame {
     if (result == JFileChooser.APPROVE_OPTION) {
         File archivotxt = fileChooser.getSelectedFile();
         try {
-            String contenido = abrirArchivoCSV(archivotxt.getAbsolutePath());
+            String contenido = abrir(archivotxt.getAbsolutePath());
             Editable.setText(contenido);
         } catch (IOException e) {
             e.printStackTrace();
@@ -155,9 +161,7 @@ public class Inicio extends javax.swing.JFrame {
 
     private void GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarActionPerformed
         // TODO add your handling code here:
-     
     String contenido = Editable.getText();
-
     JFileChooser fileChooser = new JFileChooser();
     FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos txt (*.txt)", "txt");
     fileChooser.setFileFilter(filter);
@@ -167,7 +171,7 @@ public class Inicio extends javax.swing.JFrame {
         String rutaArchivo = archivoCsv.getAbsolutePath();
         try {
             // guarda el contenido como archivo 
-            guardarComoCSV(contenido, rutaArchivo);
+            guardar(contenido, rutaArchivo);
         } catch (Exception ex) {
             // para ver errores del archivo 
             JOptionPane.showMessageDialog(this, "eror al guardar el archivo: " + ex.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
@@ -182,12 +186,34 @@ public class Inicio extends javax.swing.JFrame {
         reportes.setVisible(true);
     }//GEN-LAST:event_ReportesActionPerformed
 
+    private void CompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompilarActionPerformed
+        // TODO add your handling code here:
+        /*
+        String input = Editable.getText();
+        try {         
+            Lexico lexer = new Lexico(new StringReader(input));// crea el analizador léxico       
+            parser p = new parser(lexer);  // crea el parser
+            Symbol result = p.parse();// hace el análisis           
+            if (result != null) {// procesa el resultado
+                // Aquí procesarías el resultado para dibujar las figuras
+                dibujarFiguras(result);
+                mostrarReportes(result);
+            }
+        
+            JOptionPane.showMessageDialog(this, "compilación exitosa");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "error en la compilacion: " + ex.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
+        }*/
+    }//GEN-LAST:event_CompilarActionPerformed
+
+                            ///////////////////////////////////////////////////////
+                            ///////////////////////////////////////////////////////
+                            ///////////////////////////////////////////////////////
+                            ///////////////////////////////////////////////////////
+                            ///////////////////////////////////////////////////////
+                            ///////////////////////////////////////////////////////
     
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
-    
-     private void guardarComoCSV(String contenido, String rutaArchivo) {
+     private void guardar(String contenido, String rutaArchivo) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
         writer.write(contenido);
     } catch (IOException e) {
@@ -195,7 +221,7 @@ public class Inicio extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error al guardar el archivo: " + e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
     }
 }
-    private String abrirArchivoCSV(String rutaArchivo) throws IOException {
+    private String abrir(String rutaArchivo) throws IOException {
     StringBuilder contenido = new StringBuilder();
     try (BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo))) {
         String linea;

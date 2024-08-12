@@ -1,5 +1,6 @@
 package Gramaticas;
 import java_cup.runtime.*;
+import Gramaticas.sym;
 
 %%
 
@@ -10,11 +11,12 @@ import java_cup.runtime.*;
     private Symbol symbol(int type, Object value) {
         return new Symbol(type, yyline + 1, yycolumn + 1, value);
     }
+    private LinkedList<String> listaErrores;
 %}
 
 %init{
-    yyline =1;
-    yycolumn=1;
+    yyline = 1;
+    yycolumn = 1;
     listaErrores = new LinkedList<>();
     yybegin(YYINITIAL);
 %init}
@@ -26,12 +28,15 @@ import java_cup.runtime.*;
 %cup
 %line
 %column
+%ignorecase
 
 SaltosLinea     = \r|\n|\r\n
 EspaciosBlancos = {SaltosLinea} | [ \t\f]
 Identificador   = [a-zA-Z][a-zA-Z0-9_]*
 Enteros         = 0 | ([1-9][0-9]*)
 Decimal         = {Enteros}\.[0-9]+
+Comentario      = "//".*
+NumeroNegativo  =-({Enteros}|{Decimal})
 
 %%
 
@@ -60,7 +65,7 @@ Decimal         = {Enteros}\.[0-9]+
     "celeste"      { return symbol(sym.COLOR, yytext()); }
     
 //animados
-    "línea"        { return symbol(sym.ANIM_TIPO_LINEAL, yytext()); }
+    "lineal"        { return symbol(sym.ANIM_TIPO_LINEAL, yytext()); }
     "curva"        { return symbol(sym.ANIM_TIPO_CURVA, yytext()); }
    
 //OPERADORES 
@@ -72,14 +77,30 @@ Decimal         = {Enteros}\.[0-9]+
     ")"            { return symbol(sym.PARENTESIS_CERRADO); }
     ","            { return symbol(sym.COMA); }
     "="            { return symbol(sym.IGUAL); }
+    ";"            { return symbol(sym.PUNTO_COMA); }
+
+    
+ // Posiciones
+    "posx"         { return symbol(sym.POSX); }
+    "posy"         { return symbol(sym.POSY); }
+    "radio"        { return symbol(sym.RADIO); }
+    "ancho"        { return symbol(sym.ANCHO); }
+    "alto"         { return symbol(sym.ALTO); }
     
     {Identificador} { return symbol(sym.IDENTIFICADOR, yytext()); }
-    {Enteros}      { return symbol(sym.ENTEROS, Integer.parseInt(yytext())); }
-    {Decimal}      { return symbol(sym.DECIMAL, Double.parseDouble(yytext())); }
+    {Enteros}       { return symbol(sym.ENTEROS, Integer.parseInt(yytext())); }
+    {Decimal}       { return symbol(sym.DECIMAL, Double.parseDouble(yytext())); }
     {EspaciosBlancos} { /* ignorar */ }
-}
+
+    {Comentario}     { /* ignore comments */ }
+    {NumeroNegativo} { return symbol(sym.NUMERO, Double.parseDouble(yytext())); }   
+
 
 {EspaciosBlancos} { /* ignorar */ }
 
-//SEGUN ERRORES
-[^]               { throw new Error("NO VALIDO: "+ yytext()+"."); }
+   [^] { 
+        String errorMsg = "Error léxico: Caracter inválido <" + yytext() + "> en línea " + (yyline+1) + ", columna " + (yycolumn+1);
+        listaErrores.add(errorMsg);
+        System.out.println(errorMsg);
+    }
+}

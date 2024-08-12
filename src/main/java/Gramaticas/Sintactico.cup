@@ -1,62 +1,64 @@
-
 package Gramaticas;
-
 import java_cup.runtime.*;
 import java.util.ArrayList;
 
 parser code {:
-  
+    // Código del parser
+    public void syntax_error(Symbol s){
+        System.out.println("Error de sintaxis en la línea " + (s.left) + " columna " + (s.right) + ": Token inesperado " + s.value);
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("Error de sintaxis irrecuperable en la línea " + (s.left) + " columna " + (s.right) + ": Token inesperado " + s.value);
+    }
 :}
 
-// terminales
-terminal GRAFICAR, CIRCULO, CUADRADO, RECTANGULO, LINEA, POLIGONO;
-terminal ANIMAR, OBJETO, ANTERIOR;
-terminal String COLOR, ANIM_TIPO;
-terminal SUMA, RESTA, MULTIPLICACION, DIVISION;
-terminal PARENTESIS_ABIERTO, PARENTESIS_CERRADO, COMA, IGUAL;
+// Terminales
+terminal GRAFICAR, CIRCULO, CUADRADO, RECTANGULO, LINEA, POLIGONO, ANIMAR, OBJETO, ANTERIOR, OBJETO_ANTERIOR;
+terminal String COLOR, ANIM_TIPO_LINEAL, ANIM_TIPO_CURVA;
+terminal SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABIERTO, PARENTESIS_CERRADO, COMA, IGUAL, PUNTO_COMA;
 terminal String IDENTIFICADOR;
 terminal Integer ENTEROS;
-terminal Double DECIMAL;
+terminal Double DECIMAL, NUMERO;
+terminal POSX, POSY, RADIO, ANCHO, ALTO;
 
-// no terminales
-non terminal programa;
-non terminal instruccion;
-non terminal figura;
-non terminal animacion;
-non terminal expr;
+// No terminales
+non terminal program, statement, figure, animation;
+non terminal Double expression;
 
-// precedencias
+// Precedencia
 precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION;
 precedence left PARENTESIS_ABIERTO, PARENTESIS_CERRADO;
 
-// producciones
-start with programa;
+// Gramática
+start with program;
 
-programa ::= instruccion programa
-           | instruccion
-           ;
+program ::= statement program
+          | statement
+          ;
 
-instruccion ::= figura
-              | animacion
-              ;
-
-figura ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
-         | GRAFICAR CUADRADO PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
-         | GRAFICAR RECTANGULO PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
-         | GRAFICAR LINEA PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
-         | GRAFICAR POLIGONO PARENTESIS_ABIERTO IDENTIFICADOR COMA expr COMA expr COMA expr COMA expr COMA expr COMA COLOR PARENTESIS_CERRADO
-         ;
-
-animacion ::= ANIMAR OBJETO ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO COMA expr COMA expr COMA expr PARENTESIS_CERRADO
+statement ::= figure PUNTO_COMA
+            | animation PUNTO_COMA
             ;
 
-expr ::= expr SUMA expr
-       | expr RESTA expr
-       | expr MULTIPLICACION expr
-       | expr DIVISION expr
-       | PARENTESIS_ABIERTO expr PARENTESIS_CERRADO
-       | ENTEROS
-       | DECIMAL
-       | IDENTIFICADOR
-       ;
+figure ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
+         | GRAFICAR CUADRADO PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
+         | GRAFICAR RECTANGULO PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
+         | GRAFICAR LINEA PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
+         | GRAFICAR POLIGONO PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
+         ;
+
+animation ::= ANIMAR OBJETO_ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_LINEAL COMA expression COMA expression COMA expression PARENTESIS_CERRADO
+            | ANIMAR OBJETO_ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_CURVA COMA expression COMA expression COMA expression PARENTESIS_CERRADO
+            ;
+
+expression ::= NUMERO
+             | ENTEROS
+             | DECIMAL
+             | expression SUMA expression
+             | expression RESTA expression
+             | expression MULTIPLICACION expression
+             | expression DIVISION expression
+             | PARENTESIS_ABIERTO expression PARENTESIS_CERRADO
+             ;
