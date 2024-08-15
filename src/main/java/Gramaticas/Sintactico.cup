@@ -1,19 +1,39 @@
 package Gramaticas;
 import java_cup.runtime.*;
 import java.util.ArrayList;
+import java.awt.Color;
+import Objetos.*;
 
 parser code {:
-    // Código del parser
+    public ArrayList<Figura> figuras = new ArrayList<>();
+    
     public void syntax_error(Symbol s){
-        System.out.println("Error de sintaxis en la línea " + (s.left) + " columna " + (s.right) + ": Token inesperado " + s.value);
+        System.out.println("rror de sintaxis en la linea " + (s.left) + " columna " + (s.right+1) + ": token inesperado " + s.value);
     }
-
+    
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
-        System.out.println("Error de sintaxis irrecuperable en la línea " + (s.left) + " columna " + (s.right) + ": Token inesperado " + s.value);
+        System.out.println("rrror de sintaxis irrecuperable en la linea " + (s.left+1) + " columna " + (s.right+1) + ": token inesperado " + s.value);
     }
 :}
 
-// Terminales
+action code {:
+    private Color getColor(String colorName) {
+        switch (colorName.toLowerCase()) {
+            case "azul": return Color.BLUE;
+            case "rojo": return Color.RED;
+            case "amarillo": return Color.YELLOW;
+            case "verde": return Color.GREEN;
+            case "morado": return new Color(128, 0, 128);
+            case "cafe": return new Color(139, 69, 19);
+            case "naranja": return Color.ORANGE;
+            case "rosado": return Color.PINK;
+            case "celeste": return new Color(135, 206, 235);
+            default: return Color.BLACK;
+        }
+    }
+:}
+
+// terminales
 terminal GRAFICAR, CIRCULO, CUADRADO, RECTANGULO, LINEA, POLIGONO, ANIMAR, OBJETO, ANTERIOR, OBJETO_ANTERIOR;
 terminal String COLOR, ANIM_TIPO_LINEAL, ANIM_TIPO_CURVA;
 terminal SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABIERTO, PARENTESIS_CERRADO, COMA, IGUAL, PUNTO_COMA;
@@ -22,43 +42,60 @@ terminal Integer ENTEROS;
 terminal Double DECIMAL, NUMERO;
 terminal POSX, POSY, RADIO, ANCHO, ALTO;
 
-// No terminales
-non terminal program, statement, figure, animation;
+// no terminales
+non terminal ArrayList<Figura> program;
+non terminal Figura figure;
+non terminal statement, animation;
 non terminal Double expression;
 
-// Precedencia
+// precedencia
 precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION;
 precedence left PARENTESIS_ABIERTO, PARENTESIS_CERRADO;
 
-// Gramática
+// espero que si sea la gramatica funcional 
 start with program;
 
 program ::= statement program
           | statement
+          {: RESULT = parser.figuras; :}
           ;
 
-statement ::= figure PUNTO_COMA
+statement ::= figure:f PUNTO_COMA
+            {: parser.figuras.add(f); :}
             | animation PUNTO_COMA
             ;
 
-figure ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
-         | GRAFICAR CUADRADO PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
-         | GRAFICAR RECTANGULO PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
-         | GRAFICAR LINEA PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
-         | GRAFICAR POLIGONO PARENTESIS_ABIERTO IDENTIFICADOR COMA expression COMA expression COMA expression COMA expression COMA expression COMA COLOR PARENTESIS_CERRADO
+figure ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:r COMA COLOR:c PARENTESIS_CERRADO
+         {: RESULT = new Circulo(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)r.doubleValue(), getColor(c)); :}
+         | GRAFICAR CUADRADO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:l COMA COLOR:c PARENTESIS_CERRADO
+         {: RESULT = new Cuadrado(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)l.doubleValue(), getColor(c)); :}
+         | GRAFICAR RECTANGULO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:w COMA expression:h COMA COLOR:c PARENTESIS_CERRADO
+         {: RESULT = new Rectangulo(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)w.doubleValue(), (int)h.doubleValue(), getColor(c)); :}
+         | GRAFICAR LINEA PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x1 COMA expression:y1 COMA expression:x2 COMA expression:y2 COMA COLOR:c PARENTESIS_CERRADO
+         {: RESULT = new Linea(id, (int)x1.doubleValue(), (int)y1.doubleValue(), (int)x2.doubleValue(), (int)y2.doubleValue(), getColor(c)); :}
+         | GRAFICAR POLIGONO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:s COMA expression:w COMA expression:h COMA COLOR:c PARENTESIS_CERRADO
+         {: RESULT = new Poligono(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)s.doubleValue(), (int)w.doubleValue(), (int)h.doubleValue(), getColor(c)); :}
          ;
 
 animation ::= ANIMAR OBJETO_ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_LINEAL COMA expression COMA expression COMA expression PARENTESIS_CERRADO
             | ANIMAR OBJETO_ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_CURVA COMA expression COMA expression COMA expression PARENTESIS_CERRADO
             ;
 
-expression ::= NUMERO
-             | ENTEROS
-             | DECIMAL
-             | expression SUMA expression
-             | expression RESTA expression
-             | expression MULTIPLICACION expression
-             | expression DIVISION expression
-             | PARENTESIS_ABIERTO expression PARENTESIS_CERRADO
+expression ::= NUMERO:n
+             {: RESULT = n; :}
+             | ENTEROS:e
+             {: RESULT = e.doubleValue(); :}
+             | DECIMAL:d
+             {: RESULT = d; :}
+             | expression:e1 SUMA expression:e2
+             {: RESULT = e1 + e2; :}
+             | expression:e1 RESTA expression:e2
+             {: RESULT = e1 - e2; :}
+             | expression:e1 MULTIPLICACION expression:e2
+             {: RESULT = e1 * e2; :}
+             | expression:e1 DIVISION expression:e2
+             {: RESULT = e1 / e2; :}
+             | PARENTESIS_ABIERTO expression:e PARENTESIS_CERRADO
+             {: RESULT = e; :}
              ;
