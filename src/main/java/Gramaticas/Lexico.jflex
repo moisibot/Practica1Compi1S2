@@ -101,7 +101,7 @@ NumeroNegativo  =-({Enteros}|{Decimal})
 <<EOF>> { return symbol(sym.EOF); }
 
    [^] { 
-        String errorMsg = "Error léxico: Caracter inválido <" + yytext() + "> en línea " + (yyline+1) + ", columna " + (yycolumn+1);
+        String errorMsg = "Error lexico: Caracter invalido <" + yytext() + "> en linea " + (yyline+1) + ", columna " + (yycolumn+1);
         listaErrores.add(errorMsg);
         System.out.println(errorMsg);
     }

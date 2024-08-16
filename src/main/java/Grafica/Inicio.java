@@ -223,22 +223,25 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_ReportesActionPerformed
 
     private void CompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompilarActionPerformed
-    String input = Editable.getText();
+   
+       String input = Editable.getText();
     StringReader reader = new StringReader(input);
-    AnalizadorLexico lexer = new AnalizadorLexico(reader); //lama el lexer
-    Sintactico parser = new Sintactico(lexer); //llama el parser
-    
-    //comprueba que los comandos puedan entrar bien por el momento 
+    AnalizadorLexico lexer = new AnalizadorLexico(reader);
+    Sintactico parser = new Sintactico(lexer);
+
     try {
-        Symbol result = parser.parse(); 
-        // Obtener la lista de figuras (asumiendo que tu parser la devuelve)
-        ArrayList<Figura> figuras = (ArrayList<Figura>) result.value;
-        // Crear un nuevo JFrame para mostrar las figuras
-        JFrame frame = new JFrame("Figura");
+        parser.parse();
+        ArrayList<Figura> figuras = parser.figuras;
+        
+        if (figuras.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se encontraron figuras para dibujar.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        JFrame frame = new JFrame("Figuras");
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-       
-        // Crear un JPanel personalizado para dibujar las figuras
+
         JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -250,9 +253,19 @@ public class Inicio extends javax.swing.JFrame {
         };
         frame.add(panel);
         frame.setVisible(true);
-        
+
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "error al ingresar los datos: " + e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
+        StringBuilder errorMsg = new StringBuilder("Error al procesar la entrada:\n");
+        errorMsg.append(e.getMessage()).append("\n");
+        
+        if (parser.getErrores() != null && !parser.getErrores().isEmpty()) {
+            errorMsg.append("Errores encontrados:\n");
+            for (String error : parser.getErrores()) {
+                errorMsg.append(error).append("\n");
+            }
+        }
+        
+        JOptionPane.showMessageDialog(this, errorMsg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_CompilarActionPerformed
 
@@ -289,13 +302,12 @@ private String abrir(String rutaArchivo) throws IOException {
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
 
-  private void procesarLinea(String linea) {
+private void procesarLinea(String linea) {
         if (linea.startsWith("graficar")) {
             procesarGraficar(linea);
         }
     }
-
-    private void procesarGraficar(String linea) {
+private void procesarGraficar(String linea) {
         Pattern pattern = Pattern.compile("graficar (\\w+) \\((.*?)\\);");
         Matcher matcher = pattern.matcher(linea);
         if (matcher.find()) {
@@ -335,8 +347,7 @@ private String abrir(String rutaArchivo) throws IOException {
             }
         }
     }
-
-  private double evaluarExpresion(String expresionOriginal) {
+private double evaluarExpresion(String expresionOriginal) {
         // Usamos un array de un solo elemento para almacenar la expresión
         final String[] expresion = {expresionOriginal.replaceAll("\\s+", "")}; // Eliminar espacios
         try {
@@ -405,7 +416,7 @@ private String abrir(String rutaArchivo) throws IOException {
             return 0;
         }
     }
-    private Color obtenerColor(String colorNombre) {
+private Color obtenerColor(String colorNombre) {
         switch (colorNombre.toLowerCase()) {
             case "azul": return Color.BLUE;
             case "rojo": return Color.RED;

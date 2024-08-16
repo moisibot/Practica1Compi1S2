@@ -224,14 +224,15 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
 
-    public ArrayList<Figura> figuras = new ArrayList<>();
-    
-    public void syntax_error(Symbol s){
-        System.out.println("rror de sintaxis en la linea " + (s.left) + " columna " + (s.right+1) + ": token inesperado " + s.value);
+    public static ArrayList<Figura> figuras = new ArrayList<>();
+    public static ArrayList<String> errores = new ArrayList<>();
+
+    public void syntax_error(Symbol s) {
+        errores.add("Error sintáctico en línea " + (s.left + 1) + ", columna " + (s.right + 1) + ": " + s.value);
     }
-    
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
-        System.out.println("rrror de sintaxis irrecuperable en la linea " + (s.left+1) + " columna " + (s.right+1) + ": token inesperado " + s.value);
+
+    public static ArrayList<String> getErrores() {
+        return errores;
     }
 
 
