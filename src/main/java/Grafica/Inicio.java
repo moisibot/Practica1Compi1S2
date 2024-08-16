@@ -52,6 +52,7 @@ public class Inicio extends javax.swing.JFrame {
         Nuevo = new javax.swing.JButton();
         Reportes = new javax.swing.JButton();
         panelDibujo = new javax.swing.JPanel();
+        PanelD = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,6 +110,13 @@ public class Inicio extends javax.swing.JFrame {
             .addGap(0, 455, Short.MAX_VALUE)
         );
 
+        PanelD.setText("panel");
+        PanelD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PanelDActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -133,6 +141,8 @@ public class Inicio extends javax.swing.JFrame {
                         .addGap(123, 123, 123)
                         .addComponent(Limpiar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(PanelD)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(Reportes)
                         .addGap(95, 95, 95))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -150,7 +160,8 @@ public class Inicio extends javax.swing.JFrame {
                     .addComponent(Limpiar)
                     .addComponent(Guardar)
                     .addComponent(Nuevo)
-                    .addComponent(Reportes))
+                    .addComponent(Reportes)
+                    .addComponent(PanelD))
                 .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -239,7 +250,7 @@ public class Inicio extends javax.swing.JFrame {
         }
 
         JFrame frame = new JFrame("Figuras");
-        frame.setSize(800, 600);
+        frame.setSize(1280, 720);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel() {
@@ -268,6 +279,13 @@ public class Inicio extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, errorMsg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_CompilarActionPerformed
+
+    private void PanelDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PanelDActionPerformed
+        // TODO add your handling code here:
+        PanelDibujo inicio = new PanelDibujo();
+        this.setVisible(false);
+        inicio.setVisible(true);
+    }//GEN-LAST:event_PanelDActionPerformed
 
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
@@ -302,135 +320,6 @@ private String abrir(String rutaArchivo) throws IOException {
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
 
-private void procesarLinea(String linea) {
-        if (linea.startsWith("graficar")) {
-            procesarGraficar(linea);
-        }
-    }
-private void procesarGraficar(String linea) {
-        Pattern pattern = Pattern.compile("graficar (\\w+) \\((.*?)\\);");
-        Matcher matcher = pattern.matcher(linea);
-        if (matcher.find()) {
-            String tipo = matcher.group(1);
-            String[] params = matcher.group(2).split(",");
-            
-            String nombre = params[0].trim();
-            double posx = evaluarExpresion(params[1]);
-            double posy = evaluarExpresion(params[2]);
-            Color color = obtenerColor(params[params.length - 1].trim());
-
-            switch (tipo) {
-                case "circulo":
-                    double radio = evaluarExpresion(params[3]);
-                    figuras.add(new Circulo(nombre, (int)posx, (int)posy, (int)radio, color));
-                    break;
-                case "cuadrado":
-                    double lado = evaluarExpresion(params[3]);
-                    figuras.add(new Cuadrado(nombre, (int)posx, (int)posy, (int)lado, color));
-                    break;
-                case "rectangulo":
-                    double ancho = evaluarExpresion(params[3]);
-                    double alto = evaluarExpresion(params[4]);
-                    figuras.add(new Rectangulo(nombre, (int)posx, (int)posy, (int)ancho, (int)alto, color));
-                    break;
-                case "linea":
-                    double posx2 = evaluarExpresion(params[3]);
-                    double posy2 = evaluarExpresion(params[4]);
-                    figuras.add(new Linea(nombre, (int)posx, (int)posy, (int)posx2, (int)posy2, color));
-                    break;
-                case "poligono":
-                    int lados = (int)evaluarExpresion(params[3]);
-                    double anchoP = evaluarExpresion(params[4]);
-                    double altoP = evaluarExpresion(params[5]);
-                    figuras.add(new Poligono(nombre, (int)posx, (int)posy, lados, (int)anchoP, (int)altoP, color));
-                    break;
-            }
-        }
-    }
-private double evaluarExpresion(String expresionOriginal) {
-        // Usamos un array de un solo elemento para almacenar la expresión
-        final String[] expresion = {expresionOriginal.replaceAll("\\s+", "")}; // Eliminar espacios
-        try {
-            return new Object() {
-                int pos = -1, ch;
-
-                void nextChar() {
-                    ch = (++pos < expresion[0].length()) ? expresion[0].charAt(pos) : -1;
-                }
-
-                boolean eat(int charToEat) {
-                    while (ch == ' ') nextChar();
-                    if (ch == charToEat) {
-                        nextChar();
-                        return true;
-                    }
-                    return false;
-                }
-
-                double parse() {
-                    nextChar();
-                    double x = parseExpression();
-                    if (pos < expresion[0].length()) throw new RuntimeException("Carácter inesperado: " + (char)ch);
-                    return x;
-                }
-
-                double parseExpression() {
-                    double x = parseTerm();
-                    for (;;) {
-                        if      (eat('+')) x += parseTerm();
-                        else if (eat('-')) x -= parseTerm();
-                        else return x;
-                    }
-                }
-
-                double parseTerm() {
-                    double x = parseFactor();
-                    for (;;) {
-                        if      (eat('*')) x *= parseFactor();
-                        else if (eat('/')) x /= parseFactor();
-                        else return x;
-                    }
-                }
-
-                double parseFactor() {
-                    if (eat('+')) return parseFactor();
-                    if (eat('-')) return -parseFactor();
-
-                    double x;
-                    int startPos = this.pos;
-                    if (eat('(')) {
-                        x = parseExpression();
-                        eat(')');
-                    } else if ((ch >= '0' && ch <= '9') || ch == '.') {
-                        while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
-                        x = Double.parseDouble(expresion[0].substring(startPos, this.pos));
-                    } else {
-                        throw new RuntimeException("Carácter inesperado: " + (char)ch);
-                    }
-
-                    return x;
-                }
-            }.parse();
-        } catch (Exception e) {
-            System.out.println("Error al evaluar la expresión: " + expresionOriginal);
-            return 0;
-        }
-    }
-private Color obtenerColor(String colorNombre) {
-        switch (colorNombre.toLowerCase()) {
-            case "azul": return Color.BLUE;
-            case "rojo": return Color.RED;
-            case "amarillo": return Color.YELLOW;
-            case "verde": return Color.GREEN;
-            case "morado": return new Color(128, 0, 128);
-            case "cafe": return new Color(139, 69, 19);
-            case "naranja": return Color.ORANGE;
-            case "rosado": return Color.PINK;
-            case "celeste": return new Color(135, 206, 235);
-            default: return Color.BLACK;
-        }
-    }
-
 
 
 
@@ -441,6 +330,7 @@ private Color obtenerColor(String colorNombre) {
     private javax.swing.JButton Guardar;
     private javax.swing.JButton Limpiar;
     private javax.swing.JButton Nuevo;
+    private javax.swing.JButton PanelD;
     private javax.swing.JButton Reportes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

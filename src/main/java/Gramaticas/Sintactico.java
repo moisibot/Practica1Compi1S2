@@ -349,7 +349,7 @@ class CUP$Sintactico$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		String c = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		 RESULT = new Circulo(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)r.doubleValue(), getColor(c)); 
+		 RESULT = new Circulo(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(r), getColor(c)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("figure",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-12)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -373,7 +373,7 @@ class CUP$Sintactico$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		String c = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		 RESULT = new Cuadrado(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)l.doubleValue(), getColor(c)); 
+		 RESULT = new Cuadrado(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(l), getColor(c)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("figure",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-12)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -400,7 +400,7 @@ class CUP$Sintactico$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		String c = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		 RESULT = new Rectangulo(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)w.doubleValue(), (int)h.doubleValue(), getColor(c)); 
+		 RESULT = new Rectangulo(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(w), (int)Math.round(h), getColor(c)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("figure",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-14)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -427,7 +427,7 @@ class CUP$Sintactico$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		String c = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		 RESULT = new Linea(id, (int)x1.doubleValue(), (int)y1.doubleValue(), (int)x2.doubleValue(), (int)y2.doubleValue(), getColor(c)); 
+		 RESULT = new Linea(id, (int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), getColor(c)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("figure",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-14)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -457,7 +457,7 @@ class CUP$Sintactico$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		String c = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		 RESULT = new Poligono(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)s.doubleValue(), (int)w.doubleValue(), (int)h.doubleValue(), getColor(c)); 
+		 RESULT = new Poligono(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(s), (int)Math.round(w), (int)Math.round(h), getColor(c)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("figure",1, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-16)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

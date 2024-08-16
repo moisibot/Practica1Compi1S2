@@ -68,15 +68,15 @@ statement ::= figure:f PUNTO_COMA
             ;
 
 figure ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:r COMA COLOR:c PARENTESIS_CERRADO
-         {: RESULT = new Circulo(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)r.doubleValue(), getColor(c)); :}
+         {: RESULT = new Circulo(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(r), getColor(c)); :}
          | GRAFICAR CUADRADO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:l COMA COLOR:c PARENTESIS_CERRADO
-         {: RESULT = new Cuadrado(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)l.doubleValue(), getColor(c)); :}
+         {: RESULT = new Cuadrado(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(l), getColor(c)); :}
          | GRAFICAR RECTANGULO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:w COMA expression:h COMA COLOR:c PARENTESIS_CERRADO
-         {: RESULT = new Rectangulo(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)w.doubleValue(), (int)h.doubleValue(), getColor(c)); :}
+         {: RESULT = new Rectangulo(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(w), (int)Math.round(h), getColor(c)); :}
          | GRAFICAR LINEA PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x1 COMA expression:y1 COMA expression:x2 COMA expression:y2 COMA COLOR:c PARENTESIS_CERRADO
-         {: RESULT = new Linea(id, (int)x1.doubleValue(), (int)y1.doubleValue(), (int)x2.doubleValue(), (int)y2.doubleValue(), getColor(c)); :}
+         {: RESULT = new Linea(id, (int)Math.round(x1), (int)Math.round(y1), (int)Math.round(x2), (int)Math.round(y2), getColor(c)); :}
          | GRAFICAR POLIGONO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:s COMA expression:w COMA expression:h COMA COLOR:c PARENTESIS_CERRADO
-         {: RESULT = new Poligono(id, (int)x.doubleValue(), (int)y.doubleValue(), (int)s.doubleValue(), (int)w.doubleValue(), (int)h.doubleValue(), getColor(c)); :}
+         {: RESULT = new Poligono(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(s), (int)Math.round(w), (int)Math.round(h), getColor(c)); :}
          ;
 
 animation ::= ANIMAR OBJETO_ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_LINEAL COMA expression COMA expression COMA expression PARENTESIS_CERRADO
@@ -85,18 +85,11 @@ animation ::= ANIMAR OBJETO_ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_LINEAL COMA ex
 
 expression ::= NUMERO:n
              {: RESULT = n; :}
-             | ENTEROS:e
-             {: RESULT = e.doubleValue(); :}
-             | DECIMAL:d
-             {: RESULT = d; :}
-             | expression:e1 SUMA expression:e2
-             {: RESULT = e1 + e2; :}
-             | expression:e1 RESTA expression:e2
-             {: RESULT = e1 - e2; :}
-             | expression:e1 MULTIPLICACION expression:e2
-             {: RESULT = e1 * e2; :}
-             | expression:e1 DIVISION expression:e2
-             {: RESULT = e1 / e2; :}
-             | PARENTESIS_ABIERTO expression:e PARENTESIS_CERRADO
-             {: RESULT = e; :}
+             | ENTEROS:e {: RESULT = e.doubleValue(); :}
+             | DECIMAL:d {: RESULT = d; :}
+             | expression:e1 SUMA expression:e2 {: RESULT = e1 + e2; :}
+             | expression:e1 RESTA expression:e2 {: RESULT = e1 - e2; :}
+             | expression:e1 MULTIPLICACION expression:e2 {: RESULT = e1 * e2; :}
+             | expression:e1 DIVISION expression:e2 {: RESULT = e1 / e2; :}
+             | PARENTESIS_ABIERTO expression:e PARENTESIS_CERRADO {: RESULT = e; :}
              ;

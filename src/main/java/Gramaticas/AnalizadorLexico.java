@@ -835,7 +835,7 @@ public class AnalizadorLexico implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { String errorMsg = "Error léxico: Caracter inválido <" + yytext() + "> en línea " + (yyline+1) + ", columna " + (yycolumn+1);
+            { String errorMsg = "Error lexico: Caracter invalido <" + yytext() + "> en linea " + (yyline+1) + ", columna " + (yycolumn+1);
         listaErrores.add(errorMsg);
         System.out.println(errorMsg);
             } 
