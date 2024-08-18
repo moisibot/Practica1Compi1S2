@@ -4,9 +4,12 @@ import Gramaticas.AnalizadorLexico;
 import Gramaticas.Sintactico;
 import Objetos.*;
 import Animaciones.*;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,14 +19,15 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java_cup.runtime.Symbol;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Inicio extends javax.swing.JFrame {
@@ -51,7 +55,6 @@ public class Inicio extends javax.swing.JFrame {
         Guardar = new javax.swing.JButton();
         Nuevo = new javax.swing.JButton();
         Reportes = new javax.swing.JButton();
-        panelDibujo = new javax.swing.JPanel();
         PanelD = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -96,20 +99,6 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
 
-        panelDibujo.setBackground(new java.awt.Color(204, 204, 204));
-        panelDibujo.setForeground(new java.awt.Color(255, 153, 153));
-
-        javax.swing.GroupLayout panelDibujoLayout = new javax.swing.GroupLayout(panelDibujo);
-        panelDibujo.setLayout(panelDibujoLayout);
-        panelDibujoLayout.setHorizontalGroup(
-            panelDibujoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 270, Short.MAX_VALUE)
-        );
-        panelDibujoLayout.setVerticalGroup(
-            panelDibujoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 455, Short.MAX_VALUE)
-        );
-
         PanelD.setText("panel");
         PanelD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,34 +111,32 @@ public class Inicio extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(167, 167, 167)
-                .addComponent(Compilar)
-                .addGap(104, 104, 104)
-                .addComponent(jLabel1)
-                .addGap(143, 143, 143)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(Cargar)
+                .addGap(18, 18, 18)
+                .addComponent(Guardar)
+                .addGap(18, 18, 18)
+                .addComponent(Nuevo)
+                .addGap(123, 123, 123)
+                .addComponent(Limpiar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
+                .addComponent(PanelD)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Reportes)
+                .addGap(95, 95, 95))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(Cargar)
-                        .addGap(18, 18, 18)
-                        .addComponent(Guardar)
-                        .addGap(18, 18, 18)
-                        .addComponent(Nuevo)
-                        .addGap(123, 123, 123)
-                        .addComponent(Limpiar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(PanelD)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Reportes)
-                        .addGap(95, 95, 95))
+                        .addGap(167, 167, 167)
+                        .addComponent(Compilar)
+                        .addGap(104, 104, 104)
+                        .addComponent(jLabel1)
+                        .addGap(143, 143, 143)
+                        .addComponent(jLabel2))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                        .addComponent(panelDibujo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))))
+                        .addGap(31, 31, 31)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 876, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,9 +150,7 @@ public class Inicio extends javax.swing.JFrame {
                     .addComponent(Reportes)
                     .addComponent(PanelD))
                 .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelDibujo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Compilar)
@@ -235,11 +220,10 @@ public class Inicio extends javax.swing.JFrame {
 
     private void CompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompilarActionPerformed
    
-       String input = Editable.getText();
+      String input = Editable.getText();
     StringReader reader = new StringReader(input);
     AnalizadorLexico lexer = new AnalizadorLexico(reader);
     Sintactico parser = new Sintactico(lexer);
-
     try {
         parser.parse();
         ArrayList<Figura> figuras = parser.figuras;
@@ -248,34 +232,65 @@ public class Inicio extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se encontraron figuras para dibujar.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+        
+        /*
+        estas funciones se tomaron de otros proyectos pero sirve para hacer una division entre el jframe 
+        y la barra de herramientas para poder agregar los botones que serviran para guardar e animar
+        */
+        
+        //crea el panel general
+        //se usa SwingUtilities.invokeLater() para asegurar la creación de la interfaz grafica
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Figuras");
+            frame.setSize(1280, 920);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JFrame frame = new JFrame("Figuras");
-        frame.setSize(1280, 720);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            // se crea una barra de herramientas para los botones
+            JToolBar toolBar = new JToolBar();
+            toolBar.setFloatable(false);
 
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                for (Figura figura : figuras) {
-                    figura.dibujar(g);
+            JButton savePDFButton = new JButton("Guardar PDF");
+            savePDFButton.addActionListener(e -> RecursosInterfaz.guardarPDF(frame));
+            toolBar.add(savePDFButton);
+
+            JButton savePNGButton = new JButton("Guardar PNG");
+            savePNGButton.addActionListener(e -> RecursosInterfaz.guardarPNG(frame));
+            toolBar.add(savePNGButton);
+
+            JButton zoomOutButton = new JButton("Animar");
+            zoomOutButton.addActionListener(e -> Animar());
+            toolBar.add(zoomOutButton);
+
+            JPanel panelDibujo = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    Graphics2D g2d = (Graphics2D) g;
+                    //Graphics2D y se activa el antialiasing para mejorar la calidad del dibujo.
+                    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    for (Figura figura : figuras) {
+                        figura.dibujar(g2d);
+                    }
                 }
-            }
-        };
-        frame.add(panel);
-        frame.setVisible(true);
+            };
+            panelDibujo.setBackground(Color.GRAY);
 
+            frame.setLayout(new BorderLayout());
+            frame.add(toolBar, BorderLayout.NORTH);
+            frame.add(new JScrollPane(panelDibujo), BorderLayout.CENTER);
+
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     } catch (Exception e) {
         StringBuilder errorMsg = new StringBuilder("Error al procesar la entrada:\n");
         errorMsg.append(e.getMessage()).append("\n");
-        
         if (parser.getErrores() != null && !parser.getErrores().isEmpty()) {
             errorMsg.append("Errores encontrados:\n");
             for (String error : parser.getErrores()) {
                 errorMsg.append(error).append("\n");
             }
         }
-        
         JOptionPane.showMessageDialog(this, errorMsg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_CompilarActionPerformed
@@ -290,9 +305,7 @@ public class Inicio extends javax.swing.JFrame {
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////
+    
     
 private void guardar(String contenido, String rutaArchivo) {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
@@ -312,17 +325,20 @@ private String abrir(String rutaArchivo) throws IOException {
     }
     return contenido.toString();
 }
+                            ///////////////////////////////////////////////////////
+                            ///////////////////////////////////////////////////////
+                            ///////////////////////////////////////////////////////
+private void guardarPDF(JFrame frame) {
 
-                            ///////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////
-                            ///////////////////////////////////////////////////////
+}
 
+private void guardarPNG() {
 
+}
 
+private void Animar() {
 
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cargar;
     private javax.swing.JButton Compilar;
@@ -336,7 +352,6 @@ private String abrir(String rutaArchivo) throws IOException {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    public static javax.swing.JPanel panelDibujo;
     // End of variables declaration//GEN-END:variables
 }
 

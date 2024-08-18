@@ -67,7 +67,7 @@ NumeroNegativo  =-({Enteros}|{Decimal})
     "celeste"      { return symbol(sym.COLOR, yytext()); }
     
 //animados
-    "lineal"        { return symbol(sym.ANIM_TIPO_LINEAL, yytext()); }
+    "lineal"       { return symbol(sym.ANIM_TIPO_LINEAL, yytext()); }
     "curva"        { return symbol(sym.ANIM_TIPO_CURVA, yytext()); }
    
 //OPERADORES 
@@ -81,7 +81,6 @@ NumeroNegativo  =-({Enteros}|{Decimal})
     "="            { return symbol(sym.IGUAL); }
     ";"            { return symbol(sym.PUNTO_COMA); }
 
-    
  // Posiciones
     "posx"         { return symbol(sym.POSX); }
     "posy"         { return symbol(sym.POSY); }
