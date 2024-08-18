@@ -34,7 +34,7 @@ action code {:
     }
 :}
 
-// terminales
+// terminales: parte del alfabeto o lenguaje de nuestro programa 
 terminal GRAFICAR, CIRCULO, CUADRADO, RECTANGULO, LINEA, POLIGONO, ANIMAR, OBJETO, ANTERIOR, OBJETO_ANTERIOR;
 terminal String COLOR, ANIM_TIPO_LINEAL, ANIM_TIPO_CURVA;
 terminal SUMA, RESTA, MULTIPLICACION, DIVISION, PARENTESIS_ABIERTO, PARENTESIS_CERRADO, COMA, IGUAL, PUNTO_COMA;
@@ -43,13 +43,13 @@ terminal Integer ENTEROS;
 terminal Double DECIMAL, NUMERO;
 terminal POSX, POSY, RADIO, ANCHO, ALTO;
 
-// no terminales
+// no terminales: 
 non terminal ArrayList<Figura> program;
 non terminal Figura figure;
 non terminal statement, animation;
 non terminal Double expression;
 
-// precedencia
+// precedencia: orden gera
 precedence left SUMA, RESTA;
 precedence left MULTIPLICACION, DIVISION;
 precedence left PARENTESIS_ABIERTO, PARENTESIS_CERRADO;
@@ -67,7 +67,7 @@ statement ::= figure:f PUNTO_COMA
             | animation PUNTO_COMA
             ;
 
-figure ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:r COMA COLOR:c PARENTESIS_CERRADO
+figure ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA  expression:r COMA COLOR:c PARENTESIS_CERRADO
          {: RESULT = new Circulo(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(r), getColor(c)); :}
          | GRAFICAR CUADRADO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA expression:l COMA COLOR:c PARENTESIS_CERRADO
          {: RESULT = new Cuadrado(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(l), getColor(c)); :}

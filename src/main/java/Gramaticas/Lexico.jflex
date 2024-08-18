@@ -23,7 +23,7 @@ import Gramaticas.sym;
 
 %class AnalizadorLexico
 %public
-%unicode
+%unicode //define el conjunto de caracteres con los qiue trabajará el scanner
 %standalone
 %cup
 %line
@@ -41,6 +41,7 @@ NumeroNegativo  =-({Enteros}|{Decimal})
 %%
 
 <YYINITIAL> {
+
 //graficos 
     "graficar"     { return symbol(sym.GRAFICAR); }
     "circulo"      { return symbol(sym.CIRCULO); }
@@ -57,8 +58,9 @@ NumeroNegativo  =-({Enteros}|{Decimal})
     "rojo"         { return symbol(sym.COLOR, yytext()); }
     "amarillo"     { return symbol(sym.COLOR, yytext()); }
     "verde"        { return symbol(sym.COLOR, yytext()); }
+
 //mis colores
-    "morado"        { return symbol(sym.COLOR, yytext()); }
+    "morado"       { return symbol(sym.COLOR, yytext()); }
     "cafe"         { return symbol(sym.COLOR, yytext()); }
     "naranja"      { return symbol(sym.COLOR, yytext()); }
     "rosado"       { return symbol(sym.COLOR, yytext()); }
