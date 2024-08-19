@@ -13,8 +13,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
+import javax.swing.Timer;
 
 public class RecursosInterfaz {
+        private static Timer timer;
+    private static final int DELAY = 50; // 50 ms entre cada frame
+    private static final int MOVEMENT_SPEED = 5; // píxeles por frame
     
     public static void guardarPDF(JFrame frame) {
         JFileChooser fileChooser = new JFileChooser();
@@ -78,4 +82,5 @@ public class RecursosInterfaz {
             }
         }
     }
+    
 }

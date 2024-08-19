@@ -260,6 +260,10 @@ public class Inicio extends javax.swing.JFrame {
             JButton zoomOutButton = new JButton("Animar");
             zoomOutButton.addActionListener(e -> Animar());
             toolBar.add(zoomOutButton);
+            
+            JButton stopAnimationButton = new JButton("Detener Animación");
+           // stopAnimationButton.addActionListener(e -> RecursosInterfaz.detenerAnimacion());
+            toolBar.add(stopAnimationButton);
 
             JPanel panelDibujo = new JPanel() {
                 @Override
@@ -328,14 +332,6 @@ private String abrir(String rutaArchivo) throws IOException {
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
-private void guardarPDF(JFrame frame) {
-
-}
-
-private void guardarPNG() {
-
-}
-
 private void Animar() {
 
 }
