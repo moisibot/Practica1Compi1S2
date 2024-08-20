@@ -24,7 +24,7 @@ public class Reportes extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         animacionUso = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
-        errores = new javax.swing.JTable();
+        erroresUso = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -123,7 +123,7 @@ public class Reportes extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(animacionUso);
 
-        errores.setModel(new javax.swing.table.DefaultTableModel(
+        erroresUso.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -134,7 +134,7 @@ public class Reportes extends javax.swing.JFrame {
                 "Lexema", "Linea", "Columna", "Tipo", "Descripcion"
             }
         ));
-        jScrollPane5.setViewportView(errores);
+        jScrollPane5.setViewportView(erroresUso);
 
         jLabel1.setText("Operadores");
 
@@ -180,17 +180,21 @@ public class Reportes extends javax.swing.JFrame {
                         .addComponent(Generar)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(78, 78, 78)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane5)
-                            .addComponent(jScrollPane2)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(218, 218, 218)
-                        .addComponent(jLabel4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(282, 282, 282)
-                        .addComponent(jLabel5)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(218, 218, 218)
+                                .addComponent(jLabel4))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(282, 282, 282)
+                                .addComponent(jLabel5))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(78, 78, 78)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 399, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,7 +254,7 @@ public class Reportes extends javax.swing.JFrame {
     private javax.swing.JButton Regresar;
     public static javax.swing.JTable animacionUso;
     public static javax.swing.JTable coloresUso;
-    public static javax.swing.JTable errores;
+    public static javax.swing.JTable erroresUso;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

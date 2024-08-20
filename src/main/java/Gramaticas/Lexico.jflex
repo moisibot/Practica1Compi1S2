@@ -86,6 +86,7 @@ NumeroNegativo  =-({Enteros}|{Decimal})
     ","            { return symbol(sym.COMA); }
     "="            { return symbol(sym.IGUAL); }
     ";"            { return symbol(sym.PUNTO_COMA); }
+    "."            { return symbol(sym.PUNTO); }
 
  // Posiciones
     "posx"         { return symbol(sym.POSX); }
