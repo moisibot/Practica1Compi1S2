@@ -4,7 +4,7 @@ import java.awt.Graphics;
 public abstract class Figura {
     protected int posx, posy;
     protected Color color;
-    protected Animacion animacion;
+    protected Animaciones animacion;
     public Figura(int posx, int posy, Color color) {
         this.posx = posx;
         this.posy = posy;
@@ -12,7 +12,7 @@ public abstract class Figura {
     }
     public abstract void dibujar(Graphics g);
     public void setAnimacion(String tipo, int targetX, int targetY, int duracion) {
-        this.animacion = new Animacion(this, tipo, targetX, targetY, duracion);
+        this.animacion = new Animaciones(this, tipo, targetX, targetY, duracion);
     }
     public void actualizarAnimacion() {
         if (animacion != null) {

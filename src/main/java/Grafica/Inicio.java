@@ -1,12 +1,11 @@
 package Grafica;
 
+import static Grafica.Reportes.*;
 import Gramaticas.AnalizadorLexico;
 import Gramaticas.Sintactico;
 import Objetos.*;
-import Animaciones.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -20,24 +19,24 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Inicio extends javax.swing.JFrame {
     private List<Figura> figuras;
-    private List<Animacion> animaciones;
+ //   private List<Animacion> animaciones;
 
-
+private JFrame frame;
+private JPanel panelDibujo;
     public Inicio() {
         initComponents();
            this.setLocationRelativeTo(null);    
+
     }
     
     @SuppressWarnings("unchecked")
@@ -70,6 +69,11 @@ public class Inicio extends javax.swing.JFrame {
         });
 
         Limpiar.setText("Limpiar");
+        Limpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LimpiarActionPerformed(evt);
+            }
+        });
 
         Compilar.setText("Compilar");
         Compilar.addActionListener(new java.awt.event.ActionListener() {
@@ -178,6 +182,7 @@ public class Inicio extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "error al abrir el archivo: " + e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
     }//GEN-LAST:event_CargarActionPerformed
 
     private void GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarActionPerformed
@@ -203,67 +208,81 @@ public class Inicio extends javax.swing.JFrame {
     private void ReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReportesActionPerformed
         // TODO add your handling code here:
                Reportes reportes = new Reportes();
-        this.setVisible(false);
         reportes.setVisible(true);
+
     }//GEN-LAST:event_ReportesActionPerformed
 
     private void CompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompilarActionPerformed
-      String input = Editable.getText();
+     String input = Editable.getText();
+     
     StringReader reader = new StringReader(input);
     AnalizadorLexico lexer = new AnalizadorLexico(reader);
     Sintactico parser = new Sintactico(lexer);
+    
     try {
         parser.parse();
         ArrayList<Figura> figuras = parser.figuras;
+       // actualizarTablaOperadores(parser.getOperadoresInfo());
         if (figuras.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No se encontraron figuras para dibujar.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-                    JPanel panelDibujo = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                for (Figura figura : figuras) {
-                    figura.actualizarAnimacion(); // Actualizar animación antes de dibujar
-                    figura.dibujar(g2d);
-                }
-            }
-            };
-        /*
+        // Verificar si la ventana ya existe
+        if (frame == null) {
+                  /*
         estas funciones se tomaron de otros proyectos pero sirve para hacer una division entre el jframe 
         y la barra de herramientas para poder agregar los botones que serviran para guardar e animar
-        */
-        
+        */  
         //crea el panel general
         //se usa SwingUtilities.invokeLater() para asegurar la creación de la interfaz grafica
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Figuras");
+            // Crear la ventana y el panel de dibujo
+            frame = new JFrame("Figuras");
             frame.setSize(1280, 920);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            // se crea una barra de herramientas para los botones
+
             JToolBar toolBar = new JToolBar();
             toolBar.setFloatable(false);
-            JButton savePDFButton = new JButton("Guardar PDF");
-            savePDFButton.addActionListener(e -> RecursosInterfaz.guardarPDF(frame));
-            toolBar.add(savePDFButton);
-            JButton savePNGButton = new JButton("Guardar PNG");
-            savePNGButton.addActionListener(e -> RecursosInterfaz.guardarPNG(frame));
-            toolBar.add(savePNGButton);
+            
+            JButton limpiar = new JButton("Limpiar");
+            limpiar.addActionListener(e -> limpiar(panelDibujo));
+            toolBar.add(limpiar);
+            
+            JButton guardarpdf = new JButton("Guardar PDF");
+            guardarpdf.addActionListener(e -> RecursosInterfaz.guardarPDF(frame));
+            toolBar.add(guardarpdf);
+            
+            JButton guardarpng = new JButton("Guardar PNG");
+            guardarpng.addActionListener(e -> RecursosInterfaz.guardarPNG(frame));
+            toolBar.add(guardarpng);
+            
             JButton animarButton = new JButton("Animar");
-            //animarButton.addActionListener(e -> RecursosInterfaz.animar(figuras, panelDibujo));
             toolBar.add(animarButton);
+            
             JButton detenerAnimacionButton = new JButton("Detener Animación");
-            //detenerAnimacionButton.addActionListener(e -> RecursosInterfaz.detenerAnimacion(figuras, panelDibujo));
             toolBar.add(detenerAnimacionButton);
+
+            panelDibujo = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    Graphics2D g2d = (Graphics2D) g;
+                    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    for (Figura figura : figuras) {
+                        figura.actualizarAnimacion();
+                        figura.dibujar(g2d);
+                    }
+                }
+            };
             panelDibujo.setBackground(Color.GRAY);
             frame.setLayout(new BorderLayout());
             frame.add(toolBar, BorderLayout.NORTH);
             frame.add(new JScrollPane(panelDibujo), BorderLayout.CENTER);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-        });
+        } else {
+            // Actualizar el panel de dibujo con las nuevas figuras
+            panelDibujo.repaint();
+        }
     } catch (Exception e) {
         StringBuilder errorMsg = new StringBuilder("error al procesar la entrada:\n");
         errorMsg.append(e.getMessage()).append("\n");
@@ -276,6 +295,12 @@ public class Inicio extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, errorMsg.toString(), "error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_CompilarActionPerformed
+
+    private void LimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpiarActionPerformed
+        // TODO add your handling code here:
+        Editable.setText("");
+                Editable.setText("");
+    }//GEN-LAST:event_LimpiarActionPerformed
 
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
@@ -303,7 +328,14 @@ private String abrir(String rutaArchivo) throws IOException {
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
+private void limpiar(JPanel panelDibujo) {
+  figuras.clear();
+  panelDibujo.repaint();
+  panelDibujo.setToolTipText("");
+  
+}
 
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cargar;
     private javax.swing.JButton Compilar;

@@ -5,10 +5,13 @@
 
 package Gramaticas;
 
+import Grafica.OperadorInfo;
 import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.awt.Color;
 import Objetos.*;
+import java.util.List;
+import java.util.Map;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 generated parser.
@@ -225,7 +228,7 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
     public static ArrayList<Figura> figuras = new ArrayList<>();
-    public static ArrayList<Animacion> animaciones = new ArrayList<>();
+    public static ArrayList<Animaciones> animaciones = new ArrayList<>();
     public static ArrayList<String> errores = new ArrayList<>();
 
     public void syntax_error(Symbol s) {
@@ -237,11 +240,12 @@ public class Sintactico extends java_cup.runtime.lr_parser {
         errores.add(errorMsg);
         System.out.println(errorMsg);
     }
-
     public static ArrayList<String> getErrores() {
         return errores;
     }
-
+  public static Map<String, List<OperadorInfo>> getOperadoresInfo() {
+        return AnalizadorLexico.operadoresInfo;
+    }
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -486,7 +490,7 @@ class CUP$Sintactico$actions {
 		int oleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int oright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		Double o = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		 RESULT = new Animacion(null, "lineal", (int)Math.round(x), (int)Math.round(y), (int)Math.round(o)); 
+		 RESULT = new Animaciones(null, "lineal", (int)Math.round(x), (int)Math.round(y), (int)Math.round(o)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("animation",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-11)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -507,7 +511,7 @@ class CUP$Sintactico$actions {
 		int oleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).left;
 		int oright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).right;
 		Double o = (Double)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-1)).value;
-		 RESULT = new Animacion(null, "curva", (int)Math.round(x), (int)Math.round(y), (int)Math.round(o)); 
+		 RESULT = new Animaciones(null, "curva", (int)Math.round(x), (int)Math.round(y), (int)Math.round(o)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("animation",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-11)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

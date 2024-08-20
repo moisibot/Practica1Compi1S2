@@ -1,9 +1,9 @@
 package Gramaticas;
 import java_cup.runtime.*;
 import Gramaticas.sym;
-
+    import java.util.HashMap;
+    import java.util.Map;
 %%
-
 %{
     private Symbol symbol(int type) {
         return new Symbol(type, yyline + 1, yycolumn + 1);
@@ -12,14 +12,20 @@ import Gramaticas.sym;
         return new Symbol(type, yyline + 1, yycolumn + 1, value);
     }
     private LinkedList<String> listaErrores;
+public static Map<String, List<OperadorInfo>> operadoresInfo = new HashMap<>();
 %}
-
 %init{
     yyline = 1;
     yycolumn = 1;
     listaErrores = new LinkedList<>();
     yybegin(YYINITIAL);
 %init}
+%{
+    private void addOperadorInfo(String operador, int linea, int columna) {
+        operadoresInfo.computeIfAbsent(operador, k -> new ArrayList<>())
+                      .add(new OperadorInfo(linea, columna, operador + " " + linea + ":" + columna));
+    }
+%}
 
 %class AnalizadorLexico
 %public
@@ -96,9 +102,7 @@ NumeroNegativo  =-({Enteros}|{Decimal})
     {Comentario}     { /* ignore comments */ }
     {NumeroNegativo} { return symbol(sym.NUMERO, Double.parseDouble(yytext())); }   
 
-
 {EspaciosBlancos} { /* ignorar */ }
-
 <<EOF>> { return symbol(sym.EOF); }
 
    [^] { 
@@ -107,3 +111,20 @@ NumeroNegativo  =-({Enteros}|{Decimal})
         System.out.println(errorMsg);
     }
 }
+"+" { 
+    addOperadorInfo("+", yyline + 1, yycolumn + 1); 
+    return symbol(sym.SUMA); 
+}
+"-" { 
+    addOperadorInfo("-", yyline + 1, yycolumn + 1); 
+    return symbol(sym.RESTA); 
+}
+"*" { 
+    addOperadorInfo("*", yyline + 1, yycolumn + 1); 
+    return symbol(sym.MULTIPLICACION); 
+}
+"/" { 
+    addOperadorInfo("/", yyline + 1, yycolumn + 1); 
+    return symbol(sym.DIVISION); 
+}
+

@@ -1,12 +1,12 @@
 package Objetos;
-public class Animacion {
+public class Animaciones {
     private Figura figura;
     private String tipo;
     private int targetX, targetY;
     private int duracion;
     private long tiempoInicio;
     private boolean enEjecucion;
-    public Animacion(Figura figura, String tipo, int targetX, int targetY, int duracion) {
+    public Animaciones(Figura figura, String tipo, int targetX, int targetY, int duracion) {
         this.figura = figura;
         this.tipo = tipo;
         this.targetX = targetX;

@@ -3,7 +3,6 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 import java.awt.Color;
 import Objetos.*;
-
 parser code {:
     public static ArrayList<Figura> figuras = new ArrayList<>();
     public static ArrayList<Animacion> animaciones = new ArrayList<>();
@@ -18,11 +17,12 @@ parser code {:
         errores.add(errorMsg);
         System.out.println(errorMsg);
     }
-
     public static ArrayList<String> getErrores() {
         return errores;
     }
-
+  public static Map<String, List<OperadorInfo>> getOperadoresInfo() {
+        return AnalizadorLexico.operadoresInfo;
+    }
 :}
 
 action code {:
