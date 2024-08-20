@@ -55,7 +55,6 @@ public class Inicio extends javax.swing.JFrame {
         Guardar = new javax.swing.JButton();
         Nuevo = new javax.swing.JButton();
         Reportes = new javax.swing.JButton();
-        PanelD = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -99,13 +98,6 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
 
-        PanelD.setText("panel");
-        PanelD.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PanelDActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -119,9 +111,7 @@ public class Inicio extends javax.swing.JFrame {
                 .addComponent(Nuevo)
                 .addGap(123, 123, 123)
                 .addComponent(Limpiar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
-                .addComponent(PanelD)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Reportes)
                 .addGap(95, 95, 95))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -136,7 +126,7 @@ public class Inicio extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 876, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,8 +137,7 @@ public class Inicio extends javax.swing.JFrame {
                     .addComponent(Limpiar)
                     .addComponent(Guardar)
                     .addComponent(Nuevo)
-                    .addComponent(Reportes)
-                    .addComponent(PanelD))
+                    .addComponent(Reportes))
                 .addGap(17, 17, 17)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -219,7 +208,6 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_ReportesActionPerformed
 
     private void CompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompilarActionPerformed
-   
       String input = Editable.getText();
     StringReader reader = new StringReader(input);
     AnalizadorLexico lexer = new AnalizadorLexico(reader);
@@ -227,12 +215,22 @@ public class Inicio extends javax.swing.JFrame {
     try {
         parser.parse();
         ArrayList<Figura> figuras = parser.figuras;
-        
         if (figuras.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No se encontraron figuras para dibujar.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        
+                    JPanel panelDibujo = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                for (Figura figura : figuras) {
+                    figura.actualizarAnimacion(); // Actualizar animación antes de dibujar
+                    figura.dibujar(g2d);
+                }
+            }
+            };
         /*
         estas funciones se tomaron de otros proyectos pero sirve para hacer una division entre el jframe 
         y la barra de herramientas para poder agregar los botones que serviran para guardar e animar
@@ -244,67 +242,40 @@ public class Inicio extends javax.swing.JFrame {
             JFrame frame = new JFrame("Figuras");
             frame.setSize(1280, 920);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
             // se crea una barra de herramientas para los botones
             JToolBar toolBar = new JToolBar();
             toolBar.setFloatable(false);
-
             JButton savePDFButton = new JButton("Guardar PDF");
             savePDFButton.addActionListener(e -> RecursosInterfaz.guardarPDF(frame));
             toolBar.add(savePDFButton);
-
             JButton savePNGButton = new JButton("Guardar PNG");
             savePNGButton.addActionListener(e -> RecursosInterfaz.guardarPNG(frame));
             toolBar.add(savePNGButton);
-
-            JButton zoomOutButton = new JButton("Animar");
-            zoomOutButton.addActionListener(e -> Animar());
-            toolBar.add(zoomOutButton);
-            
-            JButton stopAnimationButton = new JButton("Detener Animación");
-           // stopAnimationButton.addActionListener(e -> RecursosInterfaz.detenerAnimacion());
-            toolBar.add(stopAnimationButton);
-
-            JPanel panelDibujo = new JPanel() {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    Graphics2D g2d = (Graphics2D) g;
-                    //Graphics2D y se activa el antialiasing para mejorar la calidad del dibujo.
-                    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                    for (Figura figura : figuras) {
-                        figura.dibujar(g2d);
-                    }
-                }
-            };
+            JButton animarButton = new JButton("Animar");
+            //animarButton.addActionListener(e -> RecursosInterfaz.animar(figuras, panelDibujo));
+            toolBar.add(animarButton);
+            JButton detenerAnimacionButton = new JButton("Detener Animación");
+            //detenerAnimacionButton.addActionListener(e -> RecursosInterfaz.detenerAnimacion(figuras, panelDibujo));
+            toolBar.add(detenerAnimacionButton);
             panelDibujo.setBackground(Color.GRAY);
-
             frame.setLayout(new BorderLayout());
             frame.add(toolBar, BorderLayout.NORTH);
             frame.add(new JScrollPane(panelDibujo), BorderLayout.CENTER);
-
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
     } catch (Exception e) {
-        StringBuilder errorMsg = new StringBuilder("Error al procesar la entrada:\n");
+        StringBuilder errorMsg = new StringBuilder("error al procesar la entrada:\n");
         errorMsg.append(e.getMessage()).append("\n");
         if (parser.getErrores() != null && !parser.getErrores().isEmpty()) {
-            errorMsg.append("Errores encontrados:\n");
+            errorMsg.append("errores encontrados:\n");
             for (String error : parser.getErrores()) {
                 errorMsg.append(error).append("\n");
             }
         }
-        JOptionPane.showMessageDialog(this, errorMsg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, errorMsg.toString(), "error", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_CompilarActionPerformed
-
-    private void PanelDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PanelDActionPerformed
-        // TODO add your handling code here:
-        PanelDibujo inicio = new PanelDibujo();
-        this.setVisible(false);
-        inicio.setVisible(true);
-    }//GEN-LAST:event_PanelDActionPerformed
 
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
@@ -332,9 +303,7 @@ private String abrir(String rutaArchivo) throws IOException {
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
                             ///////////////////////////////////////////////////////
-private void Animar() {
 
-}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cargar;
     private javax.swing.JButton Compilar;
@@ -342,7 +311,6 @@ private void Animar() {
     private javax.swing.JButton Guardar;
     private javax.swing.JButton Limpiar;
     private javax.swing.JButton Nuevo;
-    private javax.swing.JButton PanelD;
     private javax.swing.JButton Reportes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

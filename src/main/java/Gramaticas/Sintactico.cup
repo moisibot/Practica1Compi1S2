@@ -6,15 +6,23 @@ import Objetos.*;
 
 parser code {:
     public static ArrayList<Figura> figuras = new ArrayList<>();
+    public static ArrayList<Animacion> animaciones = new ArrayList<>();
     public static ArrayList<String> errores = new ArrayList<>();
 
     public void syntax_error(Symbol s) {
         errores.add("Error sintáctico en línea " + (s.left + 1) + ", columna " + (s.right + 1) + ": " + s.value);
     }
 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception {
+        String errorMsg = "Error sintáctico irrecuperable en línea " + (s.left + 1) + ", columna " + (s.right + 1) + ": " + s.value;
+        errores.add(errorMsg);
+        System.out.println(errorMsg);
+    }
+
     public static ArrayList<String> getErrores() {
         return errores;
     }
+
 :}
 
 action code {:
@@ -62,9 +70,10 @@ program ::= statement program
           {: RESULT = parser.figuras; :}
           ;
 
-statement ::= figure:f PUNTO_COMA
+
+statement ::= figure:f
             {: parser.figuras.add(f); :}
-            | animation PUNTO_COMA
+            | animation
             ;
 
 figure ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:x COMA expression:y COMA  expression:r COMA COLOR:c PARENTESIS_CERRADO
@@ -79,8 +88,10 @@ figure ::= GRAFICAR CIRCULO PARENTESIS_ABIERTO IDENTIFICADOR:id COMA expression:
          {: RESULT = new Poligono(id, (int)Math.round(x), (int)Math.round(y), (int)Math.round(s), (int)Math.round(w), (int)Math.round(h), getColor(c)); :}
          ;
 
-animation ::= ANIMAR OBJETO_ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_LINEAL COMA expression COMA expression COMA expression PARENTESIS_CERRADO
-            | ANIMAR OBJETO_ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_CURVA COMA expression COMA expression COMA expression PARENTESIS_CERRADO
+animation ::= ANIMAR OBJETO ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_LINEAL:t COMA expression:x COMA expression:y COMA expression:o PARENTESIS_CERRADO
+            {: RESULT = new Animacion(null, "lineal", (int)Math.round(x), (int)Math.round(y), (int)Math.round(o)); :}
+            | ANIMAR OBJETO ANTERIOR PARENTESIS_ABIERTO ANIM_TIPO_CURVA:t COMA expression:x COMA expression:y COMA expression:o PARENTESIS_CERRADO
+            {: RESULT = new Animacion(null, "curva", (int)Math.round(x), (int)Math.round(y), (int)Math.round(o)); :}
             ;
 
 expression ::= NUMERO:n

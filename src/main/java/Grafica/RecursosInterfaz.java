@@ -1,5 +1,4 @@
 package Grafica;
-
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,17 +7,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
-import javax.swing.Timer;
-
+import javax.swing.*;
 public class RecursosInterfaz {
-        private static Timer timer;
-    private static final int DELAY = 50; // 50 ms entre cada frame
-    private static final int MOVEMENT_SPEED = 5; // píxeles por frame
+    private static Timer temporizador;
     
     public static void guardarPDF(JFrame frame) {
         JFileChooser fileChooser = new JFileChooser();
@@ -49,9 +44,9 @@ public class RecursosInterfaz {
                 document.add(pdfImage);
 
                 document.close();
-                JOptionPane.showMessageDialog(frame, "PDF guardado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "PDF guardado exitosamente.", "bien", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(frame, "Error al guardar el PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "error al guardar el PDF: " + e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -76,11 +71,12 @@ public class RecursosInterfaz {
 
                 // Guardar la imagen como PNG
                 ImageIO.write(image, "png", fileToSave);
-                JOptionPane.showMessageDialog(frame, "PNG guardado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "PNG guardado exitosamente.", "bien", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(frame, "Error al guardar el PNG: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "error al guardar el PNG: " + e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
     
+
 }
